@@ -4,6 +4,7 @@
 
 1. [Lesson 1: Comparable and Comparator Interfaces](#lesson-1-comparable-and-comparator-interfaces)
 2. [Lesson 2: Java Generics](#lesson-2-java-generics)
+3. [Lesson 3: Java Collections Framework](#lesson-3-java-collections-framework)
 
 ## Lesson 1: Comparable and Comparator Interfaces
 
@@ -157,7 +158,93 @@ This lesson covers:
 - Set interface implementations
 - Map interface implementations
 
-### Collection Hierarchy Overview
+### Big O Notation for Collections
+
+The efficiency of collection operations is expressed using Big O notation, including best and worst-case scenarios:
+
+| Notation | Name | Description |
+|----------|------|-------------|
+| O(1) | Constant | Time is independent of collection size |
+| O(log n) | Logarithmic | Time grows logarithmically with size |
+| O(n) | Linear | Time grows linearly with size |
+| O(n²) | Quadratic | Time grows quadratically with size |
+
+#### Common Operations Complexity (Best and Worst Case)
+
+##### ArrayList
+
+| Operation | Best Case | Worst Case | Notes |
+|-----------|-----------|------------|--------|
+| Add | O(1) | O(n) | Amortized O(1) when appending; resizing causes O(n) |
+| Remove | O(1) | O(n) | O(1) when removing the last element; O(n) otherwise |
+| Search | O(1) | O(n) | O(1) if index is known; O(n) for value-based searches |
+| Access | O(1) | O(1) | Direct index access |
+
+##### LinkedList
+
+| Operation | Best Case | Worst Case | Notes |
+|-----------|-----------|------------|--------|
+| Add | O(1) | O(n) | O(1) at head/tail; O(n) for arbitrary positions |
+| Remove | O(1) | O(n) | O(1) at head/tail; O(n) for arbitrary positions |
+| Search | O(1) | O(n) | O(1) if head/tail; O(n) otherwise |
+| Access | O(1) | O(n) | O(1) for head/tail; O(n) for sequential access |
+
+##### HashSet
+
+| Operation | Best Case | Worst Case | Notes |
+|-----------|-----------|------------|--------|
+| Add | O(1) | O(n) | Collisions may degrade to O(n) (or O(log n) in Java 8+ with trees) |
+| Remove | O(1) | O(n) | Worst case due to collisions |
+| Search | O(1) | O(n) | Worst case due to collisions |
+| Access | N/A | N/A | No direct element access |
+
+##### TreeSet
+
+| Operation | Best Case | Worst Case | Notes |
+|-----------|-----------|------------|--------|
+| Add | O(log n) | O(log n) | Self-balancing tree (e.g., Red-Black Tree) |
+| Remove | O(log n) | O(log n) | Consistent logarithmic complexity |
+| Search | O(log n) | O(log n) | Balanced structure ensures efficiency |
+| Access | O(log n) | O(log n) | Accessed via iterators or methods |
+
+##### HashMap
+
+| Operation | Best Case | Worst Case | Notes |
+|-----------|-----------|------------|--------|
+| Add | O(1) | O(n) | Collisions may degrade to O(n) (or O(log n) in Java 8+ with trees) |
+| Remove | O(1) | O(n) | Worst case due to collisions |
+| Search | O(1) | O(n) | Worst case due to collisions |
+| Access | O(1) | O(n) | Direct bucket access; collisions affect performance |
+
+##### TreeMap
+
+| Operation | Best Case | Worst Case | Notes |
+|-----------|-----------|------------|--------|
+| Add | O(log n) | O(log n) | Self-balancing tree structure |
+| Remove | O(log n) | O(log n) | Consistent logarithmic complexity |
+| Search | O(log n) | O(log n) | Key-based searches |
+| Access | O(log n) | O(log n) | Accessed via key lookups |
+
+#### Key Notes:
+
+**ArrayList:**
+
+- Add/Remove at the end: Amortized O(1) (resize operations are rare)
+- Worst-case removal (e.g., first element) requires shifting all elements
+
+**LinkedList:**
+
+- Arbitrary insertion/deletion is O(n) due to traversal, but O(1) at head/tail
+
+**HashSet/HashMap:**
+
+- Assumes a good hash function. In Java 8+, collisions use tree nodes (O(log n) worst case)
+
+**TreeSet/TreeMap:**
+
+- Always balanced (e.g., Red-Black Trees in Java), ensuring stable O(log n) performance
+
+### Collection and Map Hierarchy Overview
 
 ```bash
 Collection<E>
@@ -174,7 +261,9 @@ Collection<E>
 └── Set<E>
     ├── HashSet<E>
     ├── LinkedHashSet<E>
-    └── TreeSet<E>
+    ├── SortedSet<E>
+    │   └── NavigableSet<E>
+    │       └── TreeSet<E>
     
 Map<K,V>
 ├── HashMap<K,V>
