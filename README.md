@@ -144,3 +144,187 @@ Team game implementation:
 </div>
 
 ---
+
+## Lesson 3: Java Collections Framework
+
+This lesson covers:
+
+- ArrayList and its methods
+- LinkedList implementation
+- Vector and Stack classes
+- Iterator and ListIterator
+- Queue and Deque interfaces
+- Set interface implementations
+- Map interface implementations
+
+### Collection Hierarchy Overview
+
+```bash
+Collection<E>
+├── List<E>
+│   ├── ArrayList<E>
+│   ├── LinkedList<E>
+│   └── Vector<E>
+│       └── Stack<E>
+├── Queue<E>
+│   ├── PriorityQueue<E>
+│   └── Deque<E>
+│       ├── ArrayDeque<E>
+│       └── LinkedList<E>
+└── Set<E>
+    ├── HashSet<E>
+    ├── LinkedHashSet<E>
+    └── TreeSet<E>
+    
+Map<K,V>
+├── HashMap<K,V>
+│   └── LinkedHashMap<K,V>
+├── SortedMap<K,V>
+│   └── NavigableMap<K,V>
+│       └── TreeMap<K,V>
+└── Hashtable<K,V>
+```
+
+### List Interface Implementation Examples
+
+#### ArrayList Operations
+
+```java
+ArrayList<String> list = new ArrayList<>();
+list.add("Apple");           // Adding elements
+list.add(1, "Orange");      // Adding at index
+list.remove("Apple");       // Removing element
+list.get(0);               // Accessing element
+list.set(0, "Banana");     // Replacing element
+list.indexOf("Banana");    // Finding element index
+```
+
+#### LinkedList vs ArrayList
+
+| Operation     | ArrayList | LinkedList |
+|--------------|-----------|------------|
+| Add/Remove at end | O(1) | O(1) |
+| Add/Remove at middle | O(n) | O(1) |
+| Get/Set | O(1) | O(n) |
+| Memory usage | Less | More |
+
+### Queue Interface Implementations
+
+#### PriorityQueue Example
+
+```java
+PriorityQueue<Integer> queue = new PriorityQueue<>();
+queue.offer(5);        // Adding elements
+queue.offer(1);
+queue.poll();          // Removing highest priority element
+queue.peek();          // Viewing highest priority element
+```
+
+### Set Interface Implementations
+
+| Implementation | Order | Null Elements | Duplicates | Performance |
+|----------------|-------|---------------|------------|-------------|
+| HashSet | None | One null | No | O(1) |
+| LinkedHashSet | Insertion | One null | No | O(1) |
+| TreeSet | Natural | No null | No | O(log n) |
+
+### Map Interface Implementations
+
+```java
+HashMap<String, Integer> map = new HashMap<>();
+map.put("One", 1);            // Adding entries
+map.get("One");              // Retrieving values
+map.remove("One");           // Removing entries
+map.containsKey("One");      // Checking for key
+map.containsValue(1);        // Checking for value
+```
+
+### Important Methods Overview
+
+| Collection Type | Key Methods |
+|----------------|-------------|
+| List | add(), remove(), get(), set(), indexOf() |
+| Queue | offer(), poll(), peek() |
+| Set | add(), remove(), contains() |
+| Map | put(), get(), remove(), containsKey() |
+
+### Iteration Patterns
+
+```java
+// Using Iterator
+Iterator<String> iterator = list.iterator();
+while (iterator.hasNext()) {
+    String element = iterator.next();
+}
+
+// Using ListIterator (bidirectional)
+ListIterator<String> listIterator = list.listIterator();
+while (listIterator.hasNext()) {
+    listIterator.next();
+    listIterator.previous();
+}
+```
+
+### Binary Search and Sorting
+
+```java
+Collections.sort(list);                    // Natural ordering
+Collections.sort(list, comparator);        // Custom ordering
+int index = Collections.binarySearch(list, key);  // Binary search
+```
+
+The lesson code is available in these files:
+
+ArrayList examples:
+
+- [ArrayListEx1.java](./collection/ArrayListEx1.java)
+- [ArrayListMethods1.java](./collection/ArrayListMethods1.java)
+- [ArrayListMethods2.java](./collection/ArrayListMethods2.java)
+- [ArrayListMethods3.java](./collection/ArrayListMethods3.java)
+- [ArrayListMethods4.java](./collection/ArrayListMethods4.java)
+- [ArrayListMethods5.java](./collection/ArrayListMethods5.java)
+
+LinkedList and Iteration:
+
+- [LinkedListEx1.java](./collection/LinkedListEx1.java)
+- [IteratorExample.java](./collection/IteratorExample.java)
+- [ListIteratorExample.java](./collection/ListIteratorExample.java)
+
+Vector and Stack:
+
+- [VectorExample.java](./collection/VectorExample.java)
+- [StackExample.java](./collection/StackExample.java)
+- [StackExample2.java](./collection/StackExample2.java)
+
+Queue implementations:
+
+- [LinkedListExample.java](./collection/queue_interface/LinkedListExample.java)
+- [PriorityQueueExample1.java](./collection/queue_interface/PriorityQueueExample1.java)
+- [PriorityQueueExample2.java](./collection/queue_interface/PriorityQueueExample2.java)
+- [ArrayDequeExample.java](./collection/queue_interface/ArrayDequeExample.java)
+
+Set implementations:
+
+- [HashSetExample.java](./collection/set_interface/HashSetExample.java)
+- [HashSetExample2.java](./collection/set_interface/HashSetExample2.java)
+- [LinkedHashSetExample.java](./collection/set_interface/LinkedHashSetExample.java)
+- [TreeSetExample.java](./collection/set_interface/TreeSetExample.java)
+- [TreeSetExample2.java](./collection/set_interface/TreeSetExample2.java)
+
+Map implementations:
+
+- [HashMapEx1.java](./collection/map_interface/HashMapEx1.java)
+- [HashCodeEx1.java](./collection/map_interface/HashCodeEx1.java)
+- [LinkedHashMapExample.java](./collection/map_interface/LinkedHashMapExample.java)
+- [TreeMapExample.java](./collection/map_interface/TreeMapExample.java)
+- [HashTableExample.java](./collection/map_interface/HashTableExample.java)
+
+Utility:
+
+- [BinarySearch.java](./collection/BinarySearch.java)
+
+<div align="right">
+    <b><a href="#contents">↥ Back to Contents</a></b>
+</div>
+
+---
