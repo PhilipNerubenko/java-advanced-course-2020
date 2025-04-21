@@ -5,6 +5,7 @@
 1. [Lesson 1: Comparable and Comparator Interfaces](#lesson-1-comparable-and-comparator-interfaces)
 2. [Lesson 2: Java Generics](#lesson-2-java-generics)
 3. [Lesson 3: Java Collections Framework](#lesson-3-java-collections-framework)
+4. [Lesson 4: Nested Classes in Java](#lesson-4-nested-classes-in-java)
 
 ## Lesson 1: Comparable and Comparator Interfaces
 
@@ -411,6 +412,184 @@ Map implementations:
 Utility:
 
 - [BinarySearch.java](./collection/BinarySearch.java)
+
+<div align="right">
+    <b><a href="#contents">↥ Back to Contents</a></b>
+</div>
+
+---
+
+## Lesson 4: Nested Classes in Java
+
+This lesson covers:
+
+- Static nested classes
+- Inner (non-static nested) classes
+- Local inner classes
+- Anonymous inner classes
+- Differences between nested class types
+
+### Types of Nested Classes Overview
+
+| Type | Access Level | Class Access | Instance Access | Example Use Case |
+|------|--------------|--------------|-----------------|------------------|
+| Static Nested | Can access only static members | Yes | No | Helper classes, static utilities |
+| Inner Class | Can access all members | Yes | Yes | Event handlers, UI components |
+| Local Inner | Can access all members + final locals | Yes | Yes | One-time implementations |
+| Anonymous | Can access all members + final locals | No | Yes | Event listeners, callbacks |
+
+### Implementation Examples
+
+#### 1. Static Nested Class Example
+
+```java
+public class Car {
+    private static int staticField;
+    
+    public static class Engine {
+        private int horsePower;
+        
+        public Engine(int horsePower) {
+            System.out.println(staticField); // Can access static members
+            this.horsePower = horsePower;
+        }
+    }
+}
+
+// Usage
+Car.Engine engine = new Car.Engine(150);
+```
+
+#### 2. Inner Class Example
+
+```java
+public class Car {
+    private int doorCount;
+    
+    public class Engine {
+        private int horsePower;
+        
+        public Engine(int horsePower) {
+            System.out.println(doorCount); // Can access all members
+            this.horsePower = horsePower;
+        }
+    }
+}
+
+// Usage
+Car car = new Car();
+Car.Engine engine = car.new Engine(120);
+```
+
+#### 3. Local Inner Class Example
+
+```java
+public class Math {
+    public void getResult(final int dividend, final int divisor) {
+        class Division {
+            public int getQuotient() {
+                return dividend / divisor;
+            }
+            
+            public int getRemainder() {
+                return dividend % divisor;
+            }
+        }
+        
+        Division division = new Division();
+        System.out.println("Quotient: " + division.getQuotient());
+    }
+}
+```
+
+#### 4. Anonymous Inner Class Example
+
+```java
+public class AnonymousClass {
+    public static void main(String[] args) {
+        Math2 summation = new Math2() {
+            @Override
+            public int doOperation(int a, int b) {
+                return a + b;
+            }
+        };
+        
+        System.out.println("Sum: " + summation.doOperation(10, 20));
+    }
+}
+```
+
+### Key Characteristics
+
+| Feature | Static Nested | Inner Class | Local Inner | Anonymous Inner |
+|---------|--------------|-------------|-------------|-----------------|
+| Access to enclosing members | Static only | All | All + local vars | All + local vars |
+| Can have static members | Yes | No | No | No |
+| Can access local variables | No | No | Yes (final/effectively final) | Yes (final/effectively final) |
+| Can be instantiated without enclosing instance | Yes | No | N/A | N/A |
+
+### Common Use Cases
+
+1. **Static Nested Classes:**
+   - Grouping utility classes
+   - Implementing helper functionality
+   - Encapsulating related static methods
+
+2. **Inner Classes:**
+   - UI event handling
+   - Maintaining object state
+   - Implementing data structure nodes
+
+3. **Local Inner Classes:**
+   - Complex operations in methods
+   - One-time use implementations
+   - Encapsulating method-specific logic
+
+4. **Anonymous Inner Classes:**
+   - Event listeners
+   - Callback implementations
+   - Quick interface implementations
+
+### Best Practices
+
+1. Use static nested classes when:
+   - The nested class doesn't need access to instance members
+   - You want to group related utility classes
+
+2. Use inner classes when:
+   - The class needs access to private members of outer class
+   - There's a clear relationship between classes
+
+3. Use local inner classes when:
+   - The class is only needed in one method
+   - You need access to local variables
+
+4. Use anonymous inner classes when:
+   - You need a one-time implementation
+   - The class is very simple (few methods)
+
+The lesson code is available in these files:
+
+Static nested class examples:
+
+- [Car.java](./nested_classes/static_nested_class/Car.java)
+
+Inner class examples:
+
+- [Car.java](./nested_classes/inner_class/Car.java)
+
+Local inner class examples:
+
+- [LocalInner1.java](./nested_classes/local_inner_class/LocalInner1.java)
+- [LocalInner2.java](./nested_classes/local_inner_class/LocalInner2.java)
+
+Anonymous class examples:
+
+- [AnonymousClass.java](./nested_classes/anonymous_class/AnonymousClass.java)
+
+Basic example:
+
+- [Test.java](./nested_classes/Test.java)
 
 <div align="right">
     <b><a href="#contents">↥ Back to Contents</a></b>
