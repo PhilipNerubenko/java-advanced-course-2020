@@ -6,6 +6,7 @@
 2. [Lesson 2: Java Generics](#lesson-2-java-generics)
 3. [Lesson 3: Java Collections Framework](#lesson-3-java-collections-framework)
 4. [Lesson 4: Nested Classes in Java](#lesson-4-nested-classes-in-java)
+5. [Lesson 5: Lambda Expressions in Java](#lesson-5-lambda-expressions-in-java)
 
 ## Lesson 1: Comparable and Comparator Interfaces
 
