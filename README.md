@@ -596,3 +596,185 @@ Basic example:
 </div>
 
 ---
+
+## Lesson 5: Lambda Expressions in Java
+
+This lesson covers:
+
+- Lambda syntax and functional interfaces
+- Built-in functional interfaces
+- Method references
+- Consumer, Supplier, Function interfaces
+- Predicate and its variations
+- Stream API basics with lambdas
+
+### Lambda Expression Overview
+
+| Concept | Description | Example |
+|---------|-------------|---------|
+| Lambda Syntax | `(parameters) -> expression` | `(a, b) -> a + b` |
+| Functional Interface | Interface with single abstract method | `@FunctionalInterface` |
+| Method Reference | Shorthand for simple lambdas | `String::length` |
+
+### Basic Lambda Syntax Examples
+
+```java
+// Simple lambda with one parameter
+StringProcessor processor = (str) -> str.length();
+
+// Lambda with multiple parameters
+Math2 operation = (a, b) -> a + b;
+
+// Lambda with block of code
+Math2 complexOperation = (a, b) -> {
+    System.out.println("Processing...");
+    return a + b;
+};
+```
+
+### Built-in Functional Interfaces
+
+#### Consumer Interface
+
+```java
+// Consumer example
+Consumer<Car> carModifier = car -> {
+    car.color = "Red";
+    car.engine = 3.0;
+};
+
+// Usage
+changeCar(car, carModifier);
+```
+
+#### Supplier Interface
+
+```java
+// Supplier example
+Supplier<Car> carSupplier = () -> new Car("BMW", "Black", 2.4);
+
+// Usage
+ArrayList<Car> cars = createThreeCars(carSupplier);
+```
+
+#### Function Interface
+
+```java
+// Function example
+Function<String, Integer> lengthFunction = str -> str.length();
+
+// Usage
+Integer length = lengthFunction.apply("hello");
+```
+
+#### Predicate Interface
+
+```java
+// Predicate example
+Predicate<String> lengthPredicate = s -> s.length() > 5;
+Predicate<String> shortPredicate = s -> s.length() < 3;
+
+// Combining predicates
+list.removeIf(lengthPredicate.or(shortPredicate));
+```
+
+### ForEach with Lambda
+
+```java
+List<String> list = List.of("hello", "world", "java");
+
+// Using lambda
+list.forEach(item -> System.out.println(item));
+
+// Using method reference
+list.forEach(System.out::println);
+```
+
+### Student Filter Example
+
+```java
+// Using lambda for custom filtering
+void testStudents(ArrayList<Student> students, Predicate<Student> predicate) {
+    for (Student student : students) {
+        if (predicate.test(student)) {
+            System.out.println(student);
+        }
+    }
+}
+
+// Usage
+studentInfo.testStudents(students, s -> s.getGrade() > 8.0);
+```
+
+### Key Features of Lambda Expressions
+
+1. **Concise Syntax:**
+   - No need for method name
+   - Type inference for parameters
+   - Single expression can omit braces and return
+
+2. **Access to Variables:**
+   - Can access final or effectively final local variables
+   - Can access instance and static variables
+   - Can't modify local variables
+
+3. **Functional Interface Compatibility:**
+   - Must be used with functional interfaces
+   - Interface must have exactly one abstract method
+   - Can have multiple default methods
+
+### Common Built-in Functional Interfaces
+
+| Interface | Method | Description | Example Use Case |
+|-----------|--------|-------------|-----------------|
+| Consumer<T> | accept(T) | Accepts input, returns nothing | Modifying objects |
+| Supplier<T> | get() | No input, returns result | Creating objects |
+| Function<T,R> | apply(T) | Transforms T to R | String to Integer |
+| Predicate<T> | test(T) | Returns boolean | Filtering collections |
+
+### Best Practices
+
+1. Use lambda expressions when:
+   - Working with collections
+   - Implementing event handlers
+   - Writing callback functions
+   - Creating thread tasks
+
+2. Prefer method references when:
+   - The lambda just calls one method
+   - The method already exists
+   - The code is more readable
+
+3. Choose appropriate functional interfaces:
+   - Consumer for side effects
+   - Supplier for lazy initialization
+   - Function for transformations
+   - Predicate for filtering
+
+The lesson code is available in these files:
+
+Lambda basics:
+
+- [LambdaStringLengthExample.java](./lambda/LambdaStringLengthExample.java)
+
+Functional interfaces:
+
+- [ConsumerDemo.java](./lambda/ConsumerDemo.java)
+- [SupplierDemo.java](./lambda/SupplierDemo.java)
+- [FunctionDemo.java](./lambda/FunctionDemo.java)
+
+Collection operations:
+
+- [ForEachDemo.java](./lambda/ForEachDemo.java)
+- [RemoveIf.java](./lambda/RemoveIf.java)
+
+Student example:
+
+- [Student.java](./lambda/Student.java)
+- [StudentInfo.java](./lambda/StudentInfo.java)
+
+<div align="right">
+    <b><a href="#contents">↥ Back to Contents</a></b>
+</div>
+
+---
