@@ -7,6 +7,7 @@
 3. [Lesson 3: Java Collections Framework](#lesson-3-java-collections-framework)
 4. [Lesson 4: Nested Classes in Java](#lesson-4-nested-classes-in-java)
 5. [Lesson 5: Lambda Expressions in Java](#lesson-5-lambda-expressions-in-java)
+6. [Lesson 6: Java Stream API](#lesson-6-java-stream-api)
 
 ## Lesson 1: Comparable and Comparator Interfaces
 
@@ -773,6 +774,213 @@ Student example:
 
 - [Student.java](./lambda/Student.java)
 - [StudentInfo.java](./lambda/StudentInfo.java)
+
+<div align="right">
+    <b><a href="#contents">↥ Back to Contents</a></b>
+</div>
+
+---
+
+## Lesson 6: Java Stream API
+
+This lesson covers:
+
+- Stream creation and operations
+- Map and flatMap transformations
+- Filtering and sorting
+- Terminal operations and collectors
+- Parallel streams
+- Numeric stream operations
+
+### Stream API Overview
+
+| Concept | Description | Example |
+|---------|-------------|---------|
+| Stream | Sequence of elements | `List.stream()` |
+| Intermediate Operations | Return new stream | `map(), filter()` |
+| Terminal Operations | Produce result | `collect(), reduce()` |
+| Parallel Processing | Multi-thread execution | `parallelStream()` |
+
+### Stream Creation and Basic Operations
+
+#### Creating Streams
+
+```java
+// From Collection
+List<String> list = List.of("Java", "Python", "C++");
+Stream<String> stream1 = list.stream();
+
+// From Array
+int[] array = {1, 2, 3, 4, 5};
+IntStream stream2 = Arrays.stream(array);
+
+// Using Stream.of()
+Stream<Integer> stream3 = Stream.of(1, 2, 3, 4, 5);
+```
+
+### Map Operations
+
+```java
+// Simple mapping
+List<Integer> lengthList = list.stream()
+    .map(String::length)
+    .collect(Collectors.toList());
+
+// Complex mapping with conditions
+array = Arrays.stream(array)
+    .map(element -> {
+        if (element % 3 == 0) {
+            element = element / 3;
+        }
+        return element;
+    }).toArray();
+```
+
+### FlatMap Operations
+
+```java
+// Flattening nested collections
+List<Faculty> faculties = // ...
+faculties.stream()
+    .flatMap(faculty -> faculty.getStudentsOnFaculty().stream())
+    .forEach(student -> System.out.println(student.getName()));
+```
+
+### Filtering and Sorting
+
+```java
+students.stream()
+    .filter(element -> element.getAge() > 20)
+    .sorted((x, y) -> x.getName().compareTo(y.getName()))
+    .forEach(System.out::println);
+```
+
+### Numeric Operations
+
+```java
+// Sum calculation
+int sum = students.stream()
+    .mapToInt(Student::getCourse)
+    .sum();
+
+// Average calculation
+double average = students.stream()
+    .mapToInt(Student::getCourse)
+    .average()
+    .getAsDouble();
+
+// Min and Max
+StudentFilter min = students.stream()
+    .min((x, y) -> x.getAge() - y.getAge())
+    .get();
+```
+
+### Collectors
+
+```java
+// Grouping
+Map<Integer, List<StudentFilter>> courseMap = students.stream()
+    .collect(Collectors.groupingBy(StudentFilter::getCourse));
+
+// Partitioning
+Map<Boolean, List<StudentFilter>> gradeMap = students.stream()
+    .collect(Collectors.partitioningBy(s -> s.getAvgGrade() > 3.5));
+```
+
+### Method Chaining
+
+```java
+int result = Arrays.stream(arr)
+    .filter(e -> e % 2 == 1)
+    .map(e -> {
+        if (e % 3 == 0) {e = e / 3;}
+        return e;
+    })
+    .reduce((a, e) -> a + e)
+    .getAsInt();
+```
+
+### Parallel Streams
+
+```java
+// Parallel processing
+double sum = numbers.parallelStream()
+    .reduce((a, b) -> a + b)
+    .get();
+
+// Sequential processing (when order matters)
+double division = numbers.stream()
+    .reduce((a, b) -> a / b)
+    .get();
+```
+
+### Stream Operations Overview
+
+#### Intermediate Operations
+
+| Operation | Description | Example |
+|-----------|-------------|---------|
+| map() | Transform elements | `stream.map(String::length)` |
+| filter() | Filter elements | `stream.filter(n -> n > 0)` |
+| sorted() | Sort elements | `stream.sorted()` |
+| distinct() | Remove duplicates | `stream.distinct()` |
+| limit() | Limit stream size | `stream.limit(5)` |
+| skip() | Skip elements | `stream.skip(2)` |
+
+#### Terminal Operations
+
+| Operation | Description | Example |
+|-----------|-------------|---------|
+| collect() | Collect results | `stream.collect(toList())` |
+| forEach() | Process elements | `stream.forEach(System.out::println)` |
+| reduce() | Reduce to single value | `stream.reduce(0, Integer::sum)` |
+| count() | Count elements | `stream.count()` |
+| min()/max() | Find min/max | `stream.min(Comparator.naturalOrder())` |
+| findFirst() | Find first element | `stream.findFirst()` |
+
+### Best Practices
+
+1. Use Streams when:
+   - Processing collections of data
+   - Performing multiple operations in sequence
+   - Need for parallel processing
+
+2. Avoid Streams when:
+   - Mutating state during processing
+   - Using break/continue/return
+   - Need for imperative debugging
+
+3. Performance considerations:
+   - Parallel streams for large datasets
+   - Consider operation costs
+   - Be careful with stateful operations
+
+The lesson code is available in these files:
+
+Basic Stream operations:
+
+- [`StreamMapDemo.java`](./stream/StreamMapDemo.java)
+- [`StreamOperationsDemo.java`](./stream/StreamOperationsDemo.java)
+- [`StreamMethodChainingDemo.java`](./stream/StreamMethodChainingDemo.java)
+
+Advanced operations:
+
+- [`StreamFlatMapDemo.java`](./stream/StreamFlatMapDemo.java)
+- [`StreamReduceDemo.java`](./stream/StreamReduceDemo.java)
+- [`StreamCollectorsDemo.java`](./stream/StreamCollectorsDemo.java)
+
+Array and Numeric operations:
+
+- [`ArrayStreamDemo.java`](./stream/ArrayStreamDemo.java)
+- [`StreamNumericOperationsDemo.java`](./stream/StreamNumericOperationsDemo.java)
+
+Student processing:
+
+- [`StudentStreamDemo.java`](./stream/StudentStreamDemo.java)
+
+Parallel processing:
+
+- [`ParallelStreamDemo.java`](./stream/ParallelStreamDemo.java)
 
 <div align="right">
     <b><a href="#contents">↥ Back to Contents</a></b>
