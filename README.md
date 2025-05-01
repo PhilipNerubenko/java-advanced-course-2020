@@ -8,6 +8,7 @@
 4. [Lesson 4: Nested Classes in Java](#lesson-4-nested-classes-in-java)
 5. [Lesson 5: Lambda Expressions in Java](#lesson-5-lambda-expressions-in-java)
 6. [Lesson 6: Java Stream API](#lesson-6-java-stream-api)
+7. [Lesson 7: Java Multithreading](#lesson-7-java-multithreading)
 
 ## Lesson 1: Comparable and Comparator Interfaces
 
@@ -981,6 +982,360 @@ Student processing:
 Parallel processing:
 
 - [`ParallelStreamDemo.java`](./stream/ParallelStreamDemo.java)
+
+<div align="right">
+    <b><a href="#contents">↥ Back to Contents</a></b>
+</div>
+
+---
+
+## Lesson 7: Java Multithreading
+
+This lesson covers:
+
+- Thread creation and lifecycle
+- Synchronization mechanisms
+- Thread coordination
+- Thread pools and executors
+- Thread-safe collections
+- Advanced concurrency concepts
+
+### Thread Creation and Lifecycle Overview
+
+| Creation Method | Description | Use Case |
+|----------------|-------------|-----------|
+| Extending Thread | Direct inheritance | Simple thread tasks |
+| Implementing Runnable | Interface implementation | More flexible, allows other inheritance |
+| Anonymous classes | One-time thread definitions | Quick thread creation |
+| Lambda expressions | Modern syntax | Concise thread creation |
+
+### Thread States
+
+```java
+// NEW -> RUNNABLE -> RUNNING -> TERMINATED
+Thread thread = new Thread(new WorkerTask());  // NEW
+System.out.println(thread.getState());        // NEW
+thread.start();                               // RUNNABLE
+thread.join();                                // WAITING/TIMED_WAITING
+// Thread finishes                            // TERMINATED
+```
+
+#### Thread State Transitions
+
+| State | Description | Triggered By |
+|-------|-------------|-------------|
+| NEW | Thread created but not started | new Thread() |
+| RUNNABLE | Thread executing or ready to execute | start() |
+| BLOCKED | Waiting for monitor lock | Entering synchronized block/method |
+| WAITING | Waiting indefinitely for another thread | wait(), join() |
+| TIMED_WAITING | Waiting for specified time | sleep(), wait(timeout), join(timeout) |
+| TERMINATED | Thread completed execution | run() method finished |
+
+### Basic Thread Examples
+
+#### 1. Extending Thread
+
+```java
+class CountUpThread extends Thread {
+    @Override
+    public void run() {
+        for (int i = 1; i < 1000; i++) {
+            System.out.println(i);
+        }
+    }
+}
+
+// Usage
+CountUpThread thread = new CountUpThread();
+thread.start();
+```
+
+#### 2. Implementing Runnable
+
+```java
+class CounterRunnable implements Runnable {
+    @Override
+    public void run() {
+        for (int i = 1; i <= 1000; i++) {
+            System.out.println(i);
+        }
+    }
+}
+
+// Usage
+Thread thread = new Thread(new CounterRunnable());
+thread.start();
+```
+
+### Thread Synchronization
+
+#### 1. Synchronized Methods
+
+```java
+public class Counter {
+    private static int count = 0;
+    
+    public static synchronized void increment() {
+        count++;
+    }
+}
+```
+
+#### 2. Synchronized Blocks
+
+```java
+// Using this as lock
+synchronized(this) {
+    // Critical section
+}
+
+// Using class lock
+synchronized(ClassName.class) {
+    // Critical section
+}
+
+// Using custom lock object
+private final Object lock = new Object();
+synchronized(lock) {
+    // Critical section
+}
+```
+
+### Thread Communication
+
+#### Wait/Notify Pattern
+
+```java
+class Market {
+    private int breadCount = 0;
+    private final Object lock = new Object();
+
+    public void getBread() {
+        synchronized (lock) {
+            while (breadCount < 1) {
+                lock.wait();
+            }
+            breadCount--;
+            lock.notify();
+        }
+    }
+
+    public void putBread() {
+        synchronized (lock) {
+            while (breadCount >= 5) {
+                lock.wait();
+            }
+            breadCount++;
+            lock.notify();
+        }
+    }
+}
+```
+
+### Thread Pool Types
+
+| Type | Description | Use Case |
+|------|-------------|----------|
+| Fixed | Fixed number of threads | Stable, predictable workload |
+| Cached | Creates threads as needed | Variable number of short tasks |
+| Scheduled | Can schedule future/periodic tasks | Delayed/periodic execution |
+| Single | Single thread executor | Sequential task processing |
+
+```java
+// Fixed thread pool
+ExecutorService fixedPool = Executors.newFixedThreadPool(5);
+
+// Cached thread pool
+ExecutorService cachedPool = Executors.newCachedThreadPool();
+
+// Scheduled thread pool
+ScheduledExecutorService scheduledPool = Executors.newScheduledThreadPool(1);
+
+// Usage example
+scheduledPool.scheduleAtFixedRate(task, 3, 2, TimeUnit.SECONDS);
+```
+
+### Thread Coordination Tools
+
+#### CountDownLatch
+
+```java
+CountDownLatch latch = new CountDownLatch(3);
+
+// Waiting thread
+latch.await(); // Wait for count to reach zero
+
+// Working threads
+latch.countDown(); // Decrease count
+```
+
+#### Semaphore
+
+```java
+Semaphore semaphore = new Semaphore(2); // 2 permits
+
+// Acquire permit
+semaphore.acquire();
+try {
+    // Critical section
+} finally {
+    semaphore.release(); // Release permit
+}
+```
+
+#### ReentrantLock
+
+```java
+private Lock lock = new ReentrantLock();
+
+public void someMethod() {
+    lock.lock();
+    try {
+        // Critical section
+    } finally {
+        lock.unlock();
+    }
+}
+```
+
+### Thread-Safe Collections
+
+| Collection | Description | Key Features |
+|------------|-------------|--------------|
+| ConcurrentHashMap | Thread-safe map | Segment locking, null-free |
+| CopyOnWriteArrayList | Thread-safe list | Copy on modification |
+| ArrayBlockingQueue | Bounded blocking queue | FIFO, size-bounded |
+| ConcurrentLinkedQueue | Unbounded queue | Non-blocking algorithm |
+
+```java
+// ConcurrentHashMap example
+ConcurrentHashMap<Integer, String> map = new ConcurrentHashMap<>();
+map.put(1, "One");
+map.putIfAbsent(2, "Two");
+
+// CopyOnWriteArrayList example
+CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<>();
+list.add("Item");
+Iterator<String> iterator = list.iterator(); // Snapshot iterator
+```
+
+### Advanced Concepts
+
+#### Volatile Variables
+
+```java
+public class VolatileExample {
+    private volatile boolean flag = false;
+    
+    public void setFlag() {
+        flag = true; // Visible to all threads
+    }
+    
+    public boolean isFlag() {
+        return flag;
+    }
+}
+```
+
+#### Atomic Variables
+
+```java
+public class AtomicCounter {
+    private AtomicInteger counter = new AtomicInteger(0);
+    
+    public void increment() {
+        counter.incrementAndGet();
+    }
+    
+    public int get() {
+        return counter.get();
+    }
+}
+```
+
+### Best Practices
+
+1. Thread Creation
+   - Prefer ExecutorService over manual thread creation
+   - Use thread pools for multiple similar tasks
+   - Consider thread lifecycle management
+
+2. Synchronization
+   - Use synchronized sparingly
+   - Prefer concurrent collections over synchronized blocks
+   - Keep synchronized blocks small
+
+3. Thread Safety
+   - Make classes immutable when possible
+   - Use thread-safe collections
+   - Avoid sharing mutable state
+
+4. Resource Management
+   - Always close ExecutorService properly
+   - Release locks in finally blocks
+   - Clean up thread resources
+
+5. Performance
+   - Balance thread pool size
+   - Avoid thread contention
+   - Use appropriate collection types
+
+The lesson code is available in these files:
+
+Thread Creation:
+
+- [`ThreadExtensionExample.java`](./multithreading/ThreadExtensionExample.java)
+- [`RunnableImplementationExample.java`](./multithreading/RunnableImplementationExample.java)
+- [`AnonymousThreadExample.java`](./multithreading/AnonymousThreadExample.java)
+
+Thread States and Management:
+
+- [`ThreadStateExample.java`](./multithreading/ThreadStateExample.java)
+- [`ThreadAttributesExample.java`](./multithreading/ThreadAttributesExample.java)
+- [`ThreadSleepExample.java`](./multithreading/ThreadSleepExample.java)
+- [`ThreadJoinExample.java`](./multithreading/ThreadJoinExample.java)
+- [`InterruptionExample.java`](./multithreading/InterruptionExample.java)
+- [`DaemonExample.java`](./multithreading/DaemonExample.java)
+
+Synchronization:
+
+- [`SynchronizedMethodExample.java`](./multithreading/SynchronizedMethodExample.java)
+- [`ThisLockExample.java`](./multithreading/ThisLockExample.java)
+- [`ClassLockExample.java`](./multithreading/ClassLockExample.java)
+- [`SharedLockExample.java`](./multithreading/SharedLockExample.java)
+- [`DataRaceExample.java`](./multithreading/DataRaceExample.java)
+- [`DeadLockExample.java`](./multithreading/DeadLockExample.java)
+
+Thread Coordination:
+
+- [`WaitNotifyExample.java`](./multithreading/WaitNotifyExample.java)
+- [`CountDownLatchExample.java`](./multithreading/CountDownLatchExample.java)
+- [`SemaphoreExample.java`](./multithreading/SemaphoreExample.java)
+- [`ExchangerExample.java`](./multithreading/ExchangerExample.java)
+- [`LockExample.java`](./multithreading/LockExample.java)
+- [`ATMQueueExample.java`](./multithreading/ATMQueueExample.java)
+
+Thread Pools:
+
+- [`ThreadPoolExample1.java`](./multithreading/ThreadPoolExample1.java)
+- [`ThreadPoolExample2.java`](./multithreading/ThreadPoolExample2.java)
+- [`CallableFactorial.java`](./multithreading/CallableFactorial.java)
+- [`RunnableFactorial.java`](./multithreading/RunnableFactorial.java)
+- [`SumNumbersCallable.java`](./multithreading/SumNumbersCallable.java)
+
+Thread-Safe Collections:
+
+- [`ConcurrentHashMapExample.java`](./multithreading/thread_safe/ConcurrentHashMapExample.java)
+- [`CopyOnWriteArrayListExample.java`](./multithreading/thread_safe/CopyOnWriteArrayListExample.java)
+- [`ArrayBlockingQueueExample.java`](./multithreading/thread_safe/ArrayBlockingQueueExample.java)
+- [`ArrayBlockingQueueExample2.java`](./multithreading/thread_safe/ArrayBlockingQueueExample2.java)
+- [`SynchronizedCollectionExample.java`](./multithreading/thread_safe/SynchronizedCollectionExample.java)
+- [`SynchronizedCollectionExample2.java`](./multithreading/thread_safe/SynchronizedCollectionExample2.java)
+
+Atomic Operations:
+
+- [`AtomicIntegerExample.java`](./multithreading/AtomicIntegerExample.java)
+- [`VolatileVisibilityExample.java`](./multithreading/VolatileVisibilityExample.java)
 
 <div align="right">
     <b><a href="#contents">↥ Back to Contents</a></b>
