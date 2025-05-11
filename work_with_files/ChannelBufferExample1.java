@@ -44,6 +44,20 @@ public class ChannelBufferExample1 {
 
       System.out.println(stringBuilder.toString());
 
+      String text = "\nЭто строка будет записана в файл";
+
+      // The first way to write to a file
+      ByteBuffer writeBuffer = ByteBuffer.allocate(text.getBytes().length);
+      writeBuffer.put(text.getBytes());
+
+      writeBuffer.flip(); // switch from writing to reading mode
+      
+      channel.write(writeBuffer);
+
+      // The second way to write to a file
+      ByteBuffer writeBuffer2 = ByteBuffer.wrap(text.getBytes());
+      channel.write(writeBuffer2);
+
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {

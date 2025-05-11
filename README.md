@@ -9,6 +9,7 @@
 5. [Lesson 5: Lambda Expressions in Java](#lesson-5-lambda-expressions-in-java)
 6. [Lesson 6: Java Stream API](#lesson-6-java-stream-api)
 7. [Lesson 7: Java Multithreading](#lesson-7-java-multithreading)
+8. [Lesson 8: Working with Files in Java](#lesson-8-working-with-files-in-java)
 
 ## Lesson 1: Comparable and Comparator Interfaces
 
@@ -1336,6 +1337,324 @@ Atomic Operations:
 
 - [`AtomicIntegerExample.java`](./multithreading/AtomicIntegerExample.java)
 - [`VolatileVisibilityExample.java`](./multithreading/VolatileVisibilityExample.java)
+
+<div align="right">
+    <b><a href="#contents">↥ Back to Contents</a></b>
+</div>
+
+---
+
+## Lesson 8: Working with Files in Java
+
+This lesson covers:
+
+- File system operations
+- Input/Output streams
+- Character streams (Readers/Writers)
+- Random access files
+- NIO.2 API (Paths, Files, Channels)
+- File visitors and walking file trees
+- Serialization
+
+### File Operations Overview
+
+| Operation Type | Legacy (java.io.File) | Modern (java.nio.Path) |
+|---------------|----------------------|----------------------|
+| Create | `file.createNewFile()` | `Files.createFile(path)` |
+| Delete | `file.delete()` | `Files.delete(path)` |
+| Check Existence | `file.exists()` | `Files.exists(path)` |
+| Get Properties | `file.length()` | `Files.size(path)` |
+
+### File Access Methods
+
+#### 1. Basic File Operations
+
+```java
+// Using File class
+File file = new File("FileForExample.txt");
+System.out.println("Exists: " + file.exists());
+System.out.println("Length: " + file.length());
+System.out.println("Is Directory: " + file.isDirectory());
+
+// Using Path/Files
+Path path = Paths.get("FileForExample.txt");
+System.out.println("Exists: " + Files.exists(path));
+System.out.println("Size: " + Files.size(path));
+System.out.println("Is Directory: " + Files.isDirectory(path));
+```
+
+### Stream Types Overview
+
+| Stream Type | Binary Data | Character Data | Example Use Case |
+|-------------|-------------|----------------|------------------|
+| InputStream/OutputStream | Yes | No | Image files, binary data |
+| Reader/Writer | No | Yes | Text files, character data |
+| RandomAccessFile | Yes | Yes | Database-like operations |
+| Channel/Buffer | Yes | Yes | High-performance I/O |
+
+### Text File Operations
+
+#### 1. Reading Text (FileReader)
+
+```java
+try (FileReader reader = new FileReader("FileForExample.txt")) {
+    int character;
+    while ((character = reader.read()) != -1) {
+        System.out.print((char) character);
+    }
+}
+```
+
+#### 2. Writing Text (FileWriter)
+
+```java
+try (FileWriter writer = new FileWriter("FileForExample.txt", true)) {
+    String text = "Hello, World!\n";
+    writer.write(text);
+}
+```
+
+#### 3. Buffered Operations
+
+```java
+// Buffered Reading
+try (BufferedReader reader = new BufferedReader(
+        new FileReader("FileForExample.txt"))) {
+    String line;
+    while ((line = reader.readLine()) != null) {
+        System.out.println(line);
+    }
+}
+
+// Buffered Writing
+try (BufferedWriter writer = new BufferedWriter(
+        new FileWriter("FileForExample.txt"))) {
+    writer.write("Hello");
+    writer.newLine();
+    writer.write("World");
+}
+```
+
+### Binary File Operations
+
+#### 1. Basic Stream Operations
+
+```java
+// Reading bytes
+try (FileInputStream fis = new FileInputStream("ImageForExample.png")) {
+    byte[] buffer = new byte[1024];
+    int bytesRead;
+    while ((bytesRead = fis.read(buffer)) != -1) {
+        // Process bytes
+    }
+}
+
+// Writing bytes
+try (FileOutputStream fos = new FileOutputStream("output.png")) {
+    byte[] data = // ... your binary data
+    fos.write(data);
+}
+```
+
+#### 2. Data Streams for Primitives
+
+```java
+// Writing primitive types
+try (DataOutputStream dos = new DataOutputStream(
+        new FileOutputStream("data.bin"))) {
+    dos.writeInt(123);
+    dos.writeDouble(3.14);
+    dos.writeUTF("Hello");
+}
+
+// Reading primitive types
+try (DataInputStream dis = new DataInputStream(
+        new FileInputStream("data.bin"))) {
+    int number = dis.readInt();
+    double decimal = dis.readDouble();
+    String text = dis.readUTF();
+}
+```
+
+### Random Access Files
+
+```java
+try (RandomAccessFile raf = 
+        new RandomAccessFile("FileForExample.txt", "rw")) {
+    // Read from specific position
+    raf.seek(100);
+    byte[] bytes = new byte[50];
+    raf.read(bytes);
+    
+    // Write at specific position
+    raf.seek(raf.length()); // Go to end
+    raf.write("New Data".getBytes());
+}
+```
+
+### Modern NIO.2 Operations
+
+#### 1. Path Operations
+
+```java
+Path path = Paths.get("work_with_files/test.txt");
+System.out.println("File name: " + path.getFileName());
+System.out.println("Parent: " + path.getParent());
+System.out.println("Root: " + path.getRoot());
+System.out.println("Absolute: " + path.toAbsolutePath());
+```
+
+#### 2. Files Utility Class
+
+```java
+// File operations
+Files.createFile(path);
+Files.delete(path);
+Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+Files.move(source, target);
+
+// Reading/Writing
+List<String> lines = Files.readAllLines(path);
+Files.write(path, lines);
+
+// Attributes
+System.out.println("Size: " + Files.size(path));
+System.out.println("Last Modified: " + 
+    Files.getAttribute(path, "basic:lastModifiedTime"));
+```
+
+#### 3. Directory Operations
+
+```java
+// Create directory structure
+Files.createDirectories(Paths.get("nested/dirs"));
+
+// List directory contents
+try (DirectoryStream<Path> stream = 
+        Files.newDirectoryStream(Paths.get("."))) {
+    for (Path entry : stream) {
+        System.out.println(entry.getFileName());
+    }
+}
+```
+
+### File Tree Operations
+
+#### 1. Walking File Tree
+
+```java
+public class MyFileVisitor extends SimpleFileVisitor<Path> {
+    @Override
+    public FileVisitResult visitFile(Path file, 
+            BasicFileAttributes attrs) {
+        System.out.println("Visiting file: " + file);
+        return FileVisitResult.CONTINUE;
+    }
+}
+
+Files.walkFileTree(Paths.get("."), new MyFileVisitor());
+```
+
+#### 2. Copying Directory Tree
+
+```java
+class CopyFileVisitor extends SimpleFileVisitor<Path> {
+    private final Path source;
+    private final Path target;
+
+    @Override
+    public FileVisitResult preVisitDirectory(Path dir, 
+            BasicFileAttributes attrs) throws IOException {
+        Path targetDir = target.resolve(source.relativize(dir));
+        Files.copy(dir, targetDir, StandardCopyOption.REPLACE_EXISTING);
+        return FileVisitResult.CONTINUE;
+    }
+
+    @Override
+    public FileVisitResult visitFile(Path file, 
+            BasicFileAttributes attrs) throws IOException {
+        Files.copy(file, 
+            target.resolve(source.relativize(file)), 
+            StandardCopyOption.REPLACE_EXISTING);
+        return FileVisitResult.CONTINUE;
+    }
+}
+```
+
+### Channel and Buffer Operations
+
+```java
+try (FileChannel channel = FileChannel.open(path, 
+        StandardOpenOption.READ, StandardOpenOption.WRITE)) {
+    // Reading
+    ByteBuffer buffer = ByteBuffer.allocate(1024);
+    channel.read(buffer);
+    buffer.flip();
+    
+    // Writing
+    buffer.clear();
+    buffer.put("Hello".getBytes());
+    buffer.flip();
+    channel.write(buffer);
+}
+```
+
+### Best Practices
+
+1. Resource Management:
+   - Always use try-with-resources
+   - Close resources in finally blocks if not using try-with-resources
+   - Use buffered operations for better performance
+
+2. Error Handling:
+   - Handle specific exceptions first
+   - Consider file system permissions
+   - Check file existence before operations
+
+3. Performance:
+   - Use buffered streams for text files
+   - Use channels for large files
+   - Use appropriate buffer sizes
+
+4. Character Encoding:
+   - Specify character encoding explicitly
+   - Use StandardCharsets constants
+   - Consider platform-specific line endings
+
+The lesson code is available in these files:
+
+Basic File Operations:
+
+- [`FileExample.java`](./work_with_files/FileExample.java)
+- [`PathAndFilesExample1.java`](./work_with_files/PathAndFilesExample1.java)
+- [`PathAndFilesExample2.java`](./work_with_files/PathAndFilesExample2.java)
+- [`PathAndFilesExample3.java`](./work_with_files/PathAndFilesExample3.java)
+
+Text File Operations:
+
+- [`TextFileReaderExample.java`](./work_with_files/TextFileReaderExample.java)
+- [`TextFileWriterExample.java`](./work_with_files/TextFileWriterExample.java)
+- [`FileCopyExample.java`](./work_with_files/FileCopyExample.java)
+
+Binary File Operations:
+
+- [`BinaryDataIOExample.java`](./work_with_files/BinaryDataIOExample.java)
+- [`ImageFileCopyExample.java`](./work_with_files/ImageFileCopyExample.java)
+
+Random Access:
+
+- [`RandomAccessFileExample.java`](./work_with_files/RandomAccessFileExample.java)
+
+Channel/Buffer Operations:
+
+- [`ChannelBufferExample1.java`](./work_with_files/ChannelBufferExample1.java)
+- [`ChannelBufferExample2.java`](./work_with_files/ChannelBufferExample2.java)
+
+File Tree Operations:
+
+- [`FileTree.java`](./work_with_files/FileTree.java)
+- [`CopyFileTree.java`](./work_with_files/CopyFileTree.java)
+- [`DeleteFileTree.java`](./work_with_files/DeleteFileTree.java)
 
 <div align="right">
     <b><a href="#contents">↥ Back to Contents</a></b>
