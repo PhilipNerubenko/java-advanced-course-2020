@@ -51,7 +51,7 @@ public class ChannelBufferExample1 {
       writeBuffer.put(text.getBytes());
 
       writeBuffer.flip(); // switch from writing to reading mode
-      
+
       channel.write(writeBuffer);
 
       // The second way to write to a file
