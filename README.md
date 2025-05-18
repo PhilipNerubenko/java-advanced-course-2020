@@ -10,6 +10,11 @@
 6. [Lesson 6: Java Stream API](#lesson-6-java-stream-api)
 7. [Lesson 7: Java Multithreading](#lesson-7-java-multithreading)
 8. [Lesson 8: Working with Files in Java](#lesson-8-working-with-files-in-java)
+9. [Lesson 9: Regular Expressions in Java](#lesson-9-regular-expressions-in-java)
+10. [Lesson 10: Enums in Java](#lesson-10-enums-in-java)
+11. [Lesson 11: Scanner Class in Java](#lesson-11-scanner-class-in-java)
+12. [Lesson 12: Java Reflection API](#lesson-12-java-reflection-api)
+13. [Lesson 13: Java Annotations](#lesson-13-java-annotations)
 
 ## Lesson 1: Comparable and Comparator Interfaces
 
@@ -1655,6 +1660,1023 @@ File Tree Operations:
 - [`FileTree.java`](./work_with_files/FileTree.java)
 - [`CopyFileTree.java`](./work_with_files/CopyFileTree.java)
 - [`DeleteFileTree.java`](./work_with_files/DeleteFileTree.java)
+
+<div align="right">
+    <b><a href="#contents">↥ Back to Contents</a></b>
+</div>
+
+---
+
+## Lesson 9: Regular Expressions in Java
+
+This lesson covers:
+
+- Regular expression syntax
+- Pattern and Matcher classes
+- Common regex patterns
+- Pattern matching and groups
+- String operations with regex
+
+### Regular Expression Overview
+
+| Component | Description | Example | Matches |
+|-----------|-------------|---------|---------|
+| Literal | Exact text match | `"hello"` | "hello" |
+| Character Class | Set of characters | `[aeiou]` | Any vowel |
+| Predefined Class | Common patterns | `\d`, `\w`, `\s` | Digits, word chars, whitespace |
+| Quantifiers | Repetition | `*`, `+`, `?`, `{n}` | Zero/more, one/more, optional, exactly n |
+
+### Basic Pattern Examples
+
+```java
+// Simple word pattern
+Pattern pattern = Pattern.compile("\\w+");
+Matcher matcher = pattern.matcher("Hello World");
+
+// Phone number pattern
+Pattern phonePattern = Pattern.compile("\\+\\d{9}");
+
+// Email pattern
+Pattern emailPattern = Pattern.compile("\\w+@\\w+\\.(ru|com)");
+```
+
+### Common Regex Patterns
+
+#### 1. Character Classes
+
+```java
+// Single character from set
+"[ABC]"           // Matches A, B, or C
+"[A-F]"          // Matches A through F
+"[^ABC]"         // Matches any character except A, B, or C
+```
+
+#### 2. Predefined Classes
+
+```java
+"\\d"            // Any digit [0-9]
+"\\D"            // Any non-digit
+"\\w"            // Word character [a-zA-Z0-9_]
+"\\W"            // Non-word character
+"\\s"            // Whitespace
+"\\S"            // Non-whitespace
+```
+
+#### 3. Quantifiers
+
+```java
+pattern = "\\w+"         // One or more word chars
+pattern = "\\w*"         // Zero or more word chars
+pattern = "\\w?"         // Zero or one word char
+pattern = "\\w{2,4}"     // 2 to 4 word chars
+pattern = "\\w{2,}"      // 2 or more word chars
+```
+
+### Pattern Matching Operations
+
+#### 1. Basic Matching
+
+```java
+String text = "Hello, my friend!";
+Pattern pattern = Pattern.compile("\\w+");
+Matcher matcher = pattern.matcher(text);
+
+while (matcher.find()) {
+    System.out.println("Found: " + matcher.group());
+}
+```
+
+#### 2. Group Extraction
+
+```java
+Pattern pattern = Pattern.compile("(\\d{4})(\\d{4})(\\d{4})(\\d{4})");
+Matcher matcher = pattern.matcher("1234567891234567");
+
+if (matcher.matches()) {
+    for (int i = 1; i <= matcher.groupCount(); i++) {
+        System.out.println("Group " + i + ": " + matcher.group(i));
+    }
+}
+```
+
+### String Operations with Regex
+
+#### 1. String Replacement
+
+```java
+String text = "Hello,    my    friend!";
+
+// Replace multiple spaces with single space
+text = text.replaceAll("\\s+", " ");
+
+// Replace words starting with 'm'
+text = text.replaceAll("\\bm\\w+", "444");
+```
+
+#### 2. String Splitting
+
+```java
+String text = "Hello, my friend!";
+String[] words = text.split("\\W+");
+// Result: ["Hello", "my", "friend"]
+```
+
+### Pattern Flags
+
+```java
+// Case-insensitive matching
+Pattern pattern = Pattern.compile("hello", Pattern.CASE_INSENSITIVE);
+
+// Multiline mode
+Pattern pattern2 = Pattern.compile("^hello", Pattern.MULTILINE);
+```
+
+### Common Use Cases
+
+#### 1. Email Validation
+
+```java
+public static boolean isValidEmail(String email) {
+    return email.matches("\\w+@\\w+\\.(com|ru)");
+}
+```
+
+#### 2. Phone Number Format
+
+```java
+public static boolean isValidPhone(String phone) {
+    return phone.matches("\\+\\d{9}");
+}
+```
+
+#### 3. Data Extraction
+
+```java
+Pattern pattern = Pattern.compile(
+    "(\\d{4})(\\d{4})(\\d{4})(\\d{4})(\\d{2})(\\d{2})(\\d{3})");
+Matcher matcher = pattern.matcher("1234567891234567");
+```
+
+### Best Practices
+
+1. Pattern Compilation:
+   - Compile patterns once and reuse
+   - Use appropriate flags when needed
+   - Consider using pattern pools for frequently used patterns
+
+2. Performance:
+   - Avoid excessive backtracking
+   - Use non-capturing groups (?:) when group capture isn't needed
+   - Use StringBuilder for multiple replacements
+
+3. Maintainability:
+   - Document complex patterns
+   - Break down complex patterns into smaller parts
+   - Use named groups for clarity
+
+4. Validation:
+   - Use anchors (^ and $) for full string matching
+   - Consider input length limits
+   - Handle null inputs
+
+The lesson code is available in these files:
+
+Basic regex examples:
+
+- [`Regex1.java`](./regex/Regex1.java) - Basic pattern matching
+- [`Regex2.java`](./regex/Regex2.java) - Common regex patterns
+- [`Regex3.java`](./regex/Regex3.java) - String operations
+- [`Regex4.java`](./regex/Regex4.java) - Group extraction
+
+Formatting examples:
+
+- [`PrintfExample.java`](./regex/PrintfExample.java)
+
+<div align="right">
+    <b><a href="#contents">↥ Back to Contents</a></b>
+</div>
+
+---
+
+## Lesson 10: Enums in Java
+
+This lesson covers:
+
+- Enum basics and syntax
+- Methods and fields in enums
+- Constructors and initialization
+- Switch statements with enums
+
+### Enum Overview
+
+Based on [`Enum1.java`](./enums/Enum1.java), here are the key concepts:
+
+#### Basic Enum Declaration
+
+```java
+enum WeekDays2 {
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY
+}
+```
+
+#### Enum with Fields and Methods
+
+```java
+enum WeekDays {
+    MONDAY("sad"),
+    TUESDAY("sad"),
+    WEDNESDAY("so-so"),
+    THURSDAY("so-so"),
+    FRIDAY,
+    SATURDAY("great"),
+    SUNDAY("good");
+
+    private String mood;
+
+    private WeekDays(String mood) {
+        this.mood = mood;
+    }
+
+    private WeekDays() {}
+
+    public String getMood() {
+        return mood;
+    }
+}
+```
+
+### Working with Enums
+
+#### 1. Creating and Using Enum Values
+
+```java
+// Direct enum value access
+WeekDays day = WeekDays.MONDAY;
+
+// Creating from String
+WeekDays w4 = WeekDays.valueOf("MONDAY");
+
+// Getting all enum values
+WeekDays[] arrDays = WeekDays.values();
+```
+
+#### 2. Enum Equality Comparison
+
+```java
+WeekDays w1 = WeekDays.FRIDAY;
+WeekDays w2 = WeekDays.FRIDAY;
+WeekDays w3 = WeekDays.MONDAY;
+
+// Using == operator
+System.out.println(w1 == w3);  // false
+System.out.println(w1 == w2);  // true
+
+// Note: Cannot compare enums of different types with ==
+// System.out.println(WeekDays.FRIDAY == WeekDays2.FRIDAY); // Compile error
+```
+
+#### 3. Using Enums in Classes
+
+```java
+class Today {
+    WeekDays weekDay;
+
+    public Today(WeekDays weekDay) {
+        this.weekDay = weekDay;
+    }
+
+    void daysInfo() {
+        switch (weekDay) {
+            case MONDAY:
+            case TUESDAY:
+            case WEDNESDAY:
+            case THURSDAY:
+            case FRIDAY:
+                System.out.println("Work day");
+                break;
+            case SATURDAY:
+            case SUNDAY:
+                System.out.println("Weekend");
+                break;
+        }
+        System.out.println("Mood on this day: " + weekDay.getMood());
+    }
+}
+```
+
+### Key Features of Enums
+
+1. **Constant Values:**
+   - Fixed set of constants
+   - Type-safe enumeration
+   - Cannot create new instances at runtime
+
+2. **Built-in Methods:**
+   - `values()` - returns array of all enum constants
+   - `valueOf(String)` - converts string to enum constant
+   - `name()` - returns the name of the enum constant
+   - `ordinal()` - returns the position in enum declaration
+
+3. **Additional Features:**
+   - Can have fields and methods
+   - Can have constructors (private only)
+   - Can implement interfaces
+   - Can override methods
+
+### Best Practices
+
+1. **Naming Conventions:**
+   - Use UPPERCASE for enum constants
+   - Use singular form for enum type name
+   - Use descriptive names for constants
+
+2. **Design Guidelines:**
+   - Keep enums simple and focused
+   - Use fields to store associated data
+   - Make fields final when possible
+   - Consider implementing methods for behavior
+
+3. **Usage Recommendations:**
+   - Use enums instead of integer constants
+   - Use switch statements for enum-based logic
+   - Consider using EnumSet/EnumMap for collections
+   - Document enum purpose and constants
+
+4. **Performance Considerations:**
+   - Enums are instantiated only once
+   - Memory efficient for fixed set of constants
+   - Fast equality comparison with ==
+   - Efficient in switch statements
+
+### Common Use Cases
+
+1. **Day of Week:**
+
+   ```java
+   WeekDays today = WeekDays.MONDAY;
+   ```
+
+2. **Status/State:**
+
+   ```java
+   enum Status {
+       ACTIVE, INACTIVE, PENDING
+   }
+   ```
+
+3. **Configuration Options:**
+
+   ```java
+   enum ConfigOption {
+       DEBUG, RELEASE, TEST
+   }
+   ```
+
+4. **Command Pattern:**
+
+   ```java
+   enum Command {
+       SAVE, LOAD, EXIT
+   }
+   ```
+
+The lesson code is available in these files:
+
+Basic enum examples:
+
+- [`Enum1.java`](./enums/Enum1.java) - Complete enum implementation with fields and methods
+
+<div align="right">
+    <b><a href="#contents">↥ Back to Contents</a></b>
+</div>
+
+---
+
+## Lesson 11: Scanner Class in Java
+
+This lesson covers:
+
+- Scanner class fundamentals
+- Different input sources
+- Reading various data types
+- Delimiter usage
+- File scanning operations
+
+### Scanner Overview
+
+| Feature | Description | Example Use Case |
+|---------|-------------|------------------|
+| Input Sources | Console, File, String | User input, File parsing, String tokenization |
+| Data Types | primitives, String | Reading numbers, text |
+| Delimiters | Custom patterns | Word splitting, CSV parsing |
+| Buffer Management | Auto-closeable | Resource cleanup |
+
+### Basic Scanner Usage
+
+#### 1. Console Input
+
+```java
+Scanner sc = new Scanner(System.in);
+
+// Reading different data types
+System.out.println("Input 2 Integer");
+int x = sc.nextInt();     // Read integer
+int y = sc.nextInt();     // Read another integer
+
+System.out.println("Input 2 String");
+String s1 = sc.next();    // Read word
+String s2 = sc.next();    // Read next word
+
+System.out.println("Input Double");
+double z = sc.nextDouble(); // Read double number
+```
+
+#### 2. String Source
+
+```java
+Scanner sc = new Scanner("Hello my friend!\n" +
+                        "How are you doing?\n" +
+                        "What's good?");
+
+// Reading line by line
+while (sc.hasNextLine()) {
+    System.out.println(sc.nextLine());
+}
+```
+
+### File Operations with Scanner
+
+```java
+try (Scanner sc = new Scanner(
+        new FileReader("scanner/FileForExample.txt"))) {
+    
+    // Set custom delimiter for word splitting
+    sc.useDelimiter("\\W");
+    
+    // Store unique words in sorted set
+    Set<String> uniqueWords = new TreeSet<>();
+    
+    while (sc.hasNext()) {
+        String word = sc.next();
+        if (!word.isEmpty()) {
+            uniqueWords.add(word);
+        }
+    }
+    
+    // Display unique words
+    for (String word : uniqueWords) {
+        System.out.println(word);
+    }
+}
+```
+
+### Scanner Methods Overview
+
+| Method | Description | Return Type |
+|--------|-------------|-------------|
+| next() | Read next token | String |
+| nextLine() | Read entire line | String |
+| nextInt() | Read integer | int |
+| nextDouble() | Read decimal | double |
+| hasNext() | Check for token | boolean |
+| hasNextLine() | Check for line | boolean |
+| useDelimiter() | Set delimiter | Scanner |
+
+### Best Practices
+
+1. **Resource Management:**
+   - Use try-with-resources
+   - Always close Scanner when done
+   - Don't close System.in
+
+2. **Input Validation:**
+   - Check hasNext() before reading
+   - Handle InputMismatchException
+   - Validate numeric ranges
+
+3. **Delimiter Usage:**
+   - Choose appropriate delimiters
+   - Consider whitespace handling
+   - Remember to escape regex chars
+
+4. **Performance:**
+   - Use BufferedReader for large files
+   - Reset Scanner when needed
+   - Clear buffer after reading
+
+### Common Use Cases
+
+#### 1. Console Menu
+
+```java
+Scanner scanner = new Scanner(System.in);
+System.out.println("Select option (1-3):");
+System.out.println("1. Start");
+System.out.println("2. Settings");
+System.out.println("3. Exit");
+
+int choice = scanner.nextInt();
+switch (choice) {
+    case 1: /* Start logic */ break;
+    case 2: /* Settings logic */ break;
+    case 3: /* Exit logic */ break;
+    default: System.out.println("Invalid option");
+}
+```
+
+#### 2. CSV File Processing
+
+```java
+Scanner scanner = new Scanner(new File("data.csv"));
+scanner.useDelimiter(",");
+while (scanner.hasNext()) {
+    String field = scanner.next();
+    // Process CSV field
+}
+```
+
+#### 3. Word Frequency Counter
+
+```java
+Scanner scanner = new Scanner(new File("text.txt"));
+Map<String, Integer> wordCount = new HashMap<>();
+scanner.useDelimiter("\\W+");
+
+while (scanner.hasNext()) {
+    String word = scanner.next().toLowerCase();
+    wordCount.merge(word, 1, Integer::sum);
+}
+```
+
+### Error Handling
+
+```java
+Scanner scanner = new Scanner(System.in);
+int number;
+
+try {
+    System.out.print("Enter a number: ");
+    number = scanner.nextInt();
+} catch (InputMismatchException e) {
+    System.out.println("Invalid input. Please enter a number.");
+    scanner.next(); // Clear invalid input
+}
+```
+
+The lesson code is available in these files:
+
+Console and String Input:
+
+- [`Scanner1.java`](./scanner/Scanner1.java) - Basic Scanner usage with console and string input
+
+File Processing:
+
+- [`Scanner2.java`](./scanner/Scanner2.java) - File reading and word processing
+- [`FileForExample.txt`](./scanner/FileForExample.txt) - Sample text file for processing
+
+<div align="right">
+    <b><a href="#contents">↥ Back to Contents</a></b>
+</div>
+
+---
+
+## Lesson 12: Java Reflection API
+
+This lesson covers:
+
+- Class object and reflection basics
+- Accessing fields and methods
+- Constructor manipulation
+- Dynamic method invocation
+- Reflection with annotations
+- Performance considerations
+
+### Reflection Overview
+
+| Feature | Description | Example Use Case |
+|---------|-------------|------------------|
+| Class Objects | Class metadata | Framework development |
+| Member Access | Fields, methods access | Testing tools |
+| Dynamic Invocation | Runtime method calls | Plugin systems |
+| Constructor Access | Object creation | Dependency injection |
+
+### Getting Class Objects
+
+```java
+// Three ways to get Class object
+Class<?> class1 = Class.forName("reflection_example.Employee");
+Class<?> class2 = Employee.class;
+Class<?> class3 = employee.getClass();
+
+// Getting class information
+System.out.println("Class name: " + class1.getName());
+System.out.println("Simple name: " + class1.getSimpleName());
+System.out.println("Package: " + class1.getPackage());
+```
+
+### Working with Fields
+
+```java
+// Getting fields
+Field[] fields = employeeClass.getDeclaredFields();
+for (Field field : fields) {
+    System.out.println("Field: " + field.getName());
+    System.out.println("Type: " + field.getType());
+    System.out.println("Modifiers: " + Modifier.toString(field.getModifiers()));
+}
+
+// Accessing private field
+Field salaryField = employeeClass.getDeclaredField("salary");
+salaryField.setAccessible(true);
+salaryField.setDouble(employee, 5000.0);
+```
+
+### Method Manipulation
+
+```java
+// Getting methods
+Method[] methods = employeeClass.getDeclaredMethods();
+for (Method method : methods) {
+    System.out.println("Method: " + method.getName());
+    System.out.println("Return type: " + method.getReturnType());
+    System.out.println("Parameter types: " + Arrays.toString(method.getParameterTypes()));
+}
+
+// Invoking private method
+Method changeDepartment = employeeClass.getDeclaredMethod("changeDepartment", String.class);
+changeDepartment.setAccessible(true);
+changeDepartment.invoke(employee, "IT");
+```
+
+### Constructor Access
+
+```java
+// Getting constructors
+Constructor<?>[] constructors = employeeClass.getDeclaredConstructors();
+for (Constructor<?> constructor : constructors) {
+    System.out.println("Constructor: " + constructor);
+    System.out.println("Parameters: " + Arrays.toString(constructor.getParameterTypes()));
+}
+
+// Creating object using constructor
+Constructor<Employee> constructor = Employee.class.getConstructor(
+    int.class, String.class, String.class);
+Employee employee = constructor.newInstance(1, "John", "IT");
+```
+
+### Dynamic Method Invocation Example
+
+```java
+public class Calculator {
+    void sum(int a, int b) {
+        System.out.println("Sum: " + (a + b));
+    }
+    
+    void mul(int a, int b) {
+        System.out.println("Multiplication: " + (a * b));
+    }
+}
+
+// Dynamic invocation
+Calculator calculator = new Calculator();
+Class<?> calculatorClass = calculator.getClass();
+Method method = calculatorClass.getMethod("sum", int.class, int.class);
+method.invoke(calculator, 5, 10);
+```
+
+### Reading Method Parameters from File
+
+```java
+try (BufferedReader reader = new BufferedReader(
+        new FileReader("reflection_example/FileForCalculator.txt"))) {
+    
+    String methodName = reader.readLine();
+    String firstArg = reader.readLine();
+    String secondArg = reader.readLine();
+    
+    Calculator calculator = new Calculator();
+    Method method = calculator.getClass().getMethod(
+        methodName, int.class, int.class);
+    
+    method.invoke(calculator, 
+        Integer.parseInt(firstArg), 
+        Integer.parseInt(secondArg));
+}
+```
+
+### Best Practices
+
+1. **Performance Considerations:**
+   - Cache Class objects and Methods
+   - Use reflection sparingly
+   - Consider security implications
+
+2. **Security:**
+   - Use setAccessible(true) carefully
+   - Consider security manager restrictions
+   - Validate input parameters
+
+3. **Error Handling:**
+   - Handle reflection-specific exceptions
+   - Validate method/field existence
+   - Check parameter types
+
+4. **Design:**
+   - Prefer compile-time solutions when possible
+   - Document reflection usage
+   - Consider alternatives (interfaces, factories)
+
+### Common Use Cases
+
+#### 1. Framework Development
+
+```java
+// Spring-like dependency injection
+@Autowired
+private UserService userService;
+
+// Finding annotated fields
+for (Field field : class1.getDeclaredFields()) {
+    if (field.isAnnotationPresent(Autowired.class)) {
+        // Perform injection
+    }
+}
+```
+
+#### 2. Testing Tools
+
+```java
+// JUnit-like test runner
+for (Method method : testClass.getDeclaredMethods()) {
+    if (method.isAnnotationPresent(Test.class)) {
+        method.invoke(testInstance);
+    }
+}
+```
+
+#### 3. Plugin Systems
+
+```java
+// Loading plugin class
+Class<?> pluginClass = Class.forName(pluginClassName);
+Plugin plugin = (Plugin) pluginClass.getDeclaredConstructor().newInstance();
+plugin.execute();
+```
+
+The lesson code is available in these files:
+
+Basic reflection examples:
+- [`Example1.java`](./reflection_example/Example1.java) - Basic reflection operations
+- [`Example2.java`](./reflection_example/Example2.java) - Method reflection
+- [`Example3.java`](./reflection_example/Example3.java) - Constructor reflection
+
+Calculator example:
+- [`Calculator.java`](./reflection_example/Calculator.java) - Dynamic method invocation
+- [`FileForCalculator.txt`](./reflection_example/FileForCalculator.txt) - Input parameters
+
+Employee example:
+- [`Employee.java`](./reflection_example/Employee.java) - Target class for reflection
+
+<div align="right">
+    <b><a href="#contents">↥ Back to Contents</a></b>
+</div>
+
+---
+
+## Lesson 13: Java Annotations
+
+This lesson covers:
+
+- Annotation basics and syntax
+- Built-in annotations
+- Custom annotations
+- Annotation retention policies
+- Annotation processing
+- Annotation use cases
+
+### Annotation Overview
+
+| Feature | Description | Example Use Case |
+|---------|-------------|------------------|
+| Built-in Annotations | Java provided | `@Override`, `@Deprecated` |
+| Custom Annotations | User-defined | `@MyAnnotation`, `@SmartPhone` |
+| Meta-Annotations | Annotations for annotations | `@Target`, `@Retention` |
+| Retention Policies | Annotation lifetime | SOURCE, CLASS, RUNTIME |
+
+### Basic Annotation Examples
+
+#### 1. Built-in Annotations
+
+```java
+class Parent {
+    @Deprecated
+    void showInfo() {
+        System.out.println("It's Parent class. Name = " + name);
+    }
+}
+
+class Child extends Parent {
+    @Override
+    void showInfo() {
+        System.out.println("It's Child class. Name = " + name);
+    }
+}
+```
+
+#### 2. Custom Annotation Definition
+
+```java
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@interface MyAnnotation {
+    // No parameters
+}
+
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@interface SmartPhone {
+    String os() default "Android";
+    int yearOfCompanyCreation() default 2010;
+}
+```
+
+### Using Annotations
+
+#### 1. Basic Usage
+
+```java
+@MyAnnotation
+public class Employee {
+    String name;
+    double salary;
+    
+    @MyAnnotation
+    public void increaseSalary() {
+        salary *= 2;
+    }
+}
+```
+
+#### 2. Annotations with Parameters
+
+```java
+@SmartPhone(yearOfCompanyCreation = 2017)
+class Xiaomi {
+    String model;
+    double price;
+}
+
+@SmartPhone(os = "IOS")
+class Iphone {
+    String model;
+    double price;
+}
+```
+
+### Annotation Processing
+
+#### 1. Reading Annotations at Runtime
+
+```java
+// Get Class object
+Class xiaomiClass = Class.forName("annotation_examples.Xiaomi");
+
+// Get annotation
+Annotation annotation = xiaomiClass.getAnnotation(SmartPhone.class);
+SmartPhone smartphone = (SmartPhone) annotation;
+
+// Read annotation parameters
+System.out.println("OS: " + smartphone.os());
+System.out.println("Year: " + smartphone.yearOfCompanyCreation());
+```
+
+#### 2. Processing Multiple Classes
+
+```java
+public static void processPhoneInfo(Class<?> phoneClass) {
+    if (phoneClass.isAnnotationPresent(SmartPhone.class)) {
+        SmartPhone annotation = phoneClass.getAnnotation(SmartPhone.class);
+        System.out.println("Phone Info:");
+        System.out.println("OS: " + annotation.os());
+        System.out.println("Year: " + annotation.yearOfCompanyCreation());
+    }
+}
+```
+
+### Meta-Annotations
+
+| Annotation | Purpose | Example |
+|------------|---------|---------|
+| @Target | Where annotation can be used | `@Target(ElementType.METHOD)` |
+| @Retention | How long annotation is kept | `@Retention(RetentionPolicy.RUNTIME)` |
+| @Documented | Include in JavaDoc | `@Documented` |
+| @Inherited | Inherit from superclass | `@Inherited` |
+
+### Retention Policies
+
+```java
+// Source only - discarded by compiler
+@Retention(RetentionPolicy.SOURCE)
+
+// Recorded in class file but not loaded by JVM
+@Retention(RetentionPolicy.CLASS)
+
+// Recorded and available at runtime
+@Retention(RetentionPolicy.RUNTIME)
+```
+
+### Target Types
+
+```java
+@Target can specify multiple locations:
+- ElementType.TYPE (classes)
+- ElementType.FIELD
+- ElementType.METHOD
+- ElementType.PARAMETER
+- ElementType.CONSTRUCTOR
+- ElementType.LOCAL_VARIABLE
+- ElementType.ANNOTATION_TYPE
+- ElementType.PACKAGE
+```
+
+### Best Practices
+
+1. **Annotation Design:**
+   - Keep annotations focused and simple
+   - Use meaningful default values
+   - Document annotation purpose and usage
+   - Consider retention policy carefully
+
+2. **Usage Guidelines:**
+   - Don't overuse annotations
+   - Validate annotation parameters
+   - Handle missing annotations gracefully
+   - Consider performance impact
+
+3. **Processing:**
+   - Cache annotation lookups
+   - Handle exceptions during reflection
+   - Use type-safe annotation access
+   - Consider compile-time processing
+
+4. **Documentation:**
+   - Document annotation requirements
+   - Provide usage examples
+   - Explain retention and inheritance
+   - Document processing behavior
+
+### Common Use Cases
+
+1. **Configuration:**
+   ```java
+   @Configuration(path = "config.properties")
+   public class AppConfig {
+       // Configuration implementation
+   }
+   ```
+
+2. **Validation:**
+
+   ```java
+   public class User {
+       @NotNull
+       @Size(min = 2, max = 30)
+       private String username;
+   }
+   ```
+
+3. **Dependency Injection:**
+
+   ```java
+   public class UserService {
+       @Autowired
+       private UserRepository repository;
+   }
+   ```
+
+4. **Testing:**
+
+   ```java
+   @Test
+   @Timeout(value = 100, unit = TimeUnit.MILLISECONDS)
+   public void testOperation() {
+       // Test implementation
+   }
+   ```
+
+The lesson code is available in these files:
+
+Basic annotation examples:
+
+- [`Employee.java`](./annotation_examples/Employee.java) - Custom annotation usage
+- [`Test1.java`](./annotation_examples/Test1.java) - Built-in annotations
+- [`Test2.java`](./annotation_examples/Test2.java) - Annotation processing
 
 <div align="right">
     <b><a href="#contents">↥ Back to Contents</a></b>
