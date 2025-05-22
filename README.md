@@ -1,5 +1,4 @@
-# Java Advanced Course 2020
-
+# Java Advanced Course
 ## Contents
 
 1. [Lesson 1: Comparable and Comparator Interfaces](#lesson-1-comparable-and-comparator-interfaces)
